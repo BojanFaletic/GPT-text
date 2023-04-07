@@ -61,6 +61,13 @@ var tmp = 3;
 function on_send_button(){
     // get from text from message
     var msg = document.getElementById('message');
+    msg.value = msg.value.trim();
+    
+    /* check if message is empty */
+    if (msg.value == "") {
+        return;
+    }
+
     console.log(msg.value);
 
     // add user message to chat

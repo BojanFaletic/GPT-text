@@ -8,7 +8,7 @@ body {
 
 #chat{
     /* set width */
-    width: 500px;
+    /* width: 500px; */
     /* set height */
     /* height: 500px; */
     /* set border */
@@ -21,8 +21,6 @@ body {
     margin: 0 auto;
     /* set padding */
     padding: 10px;
-    /* set overflow */
-    overflow: auto;
 }
 
 /* for box class */
