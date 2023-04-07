@@ -1,5 +1,112 @@
 
 /* black background */
 body {
-    background-color: #24995e;
+    /* background gradient */
+    background: #404652;
+    /* set font color */
+    color: #fff;
+    /* set font size */
+    font-size: 1.5em;
+    /* set font family */
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+#chat{
+    /* set width */
+    /* width: 500px; */
+    /* set height */
+    /* height: 500px; */
+    /* set border */
+    border: 1px solid #334a40;
+    /* set border radius */
+    border-radius: 5px;
+    /* set background color */
+    background-color: #687284;
+    /* set margin */
+    margin: 0 auto;
+    /* set padding */
+    padding: 10px;
+}
+
+/* for box class */
+.msg_user {
+    /* position a bit to the right */
+    background-color: #57a783;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.msg_current{
+    /* position a bit to the right */
+    background-color: #57a783;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+
+.msg_bot {
+    background-color: #b482c3;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.msg_icon{
+    float: left;
+    /* set width */
+    width: 25px;
+    /* set height */
+    height: 25px;
+    /* set border radius */
+    border-radius: 5px;
+    /* set padding */
+    padding: 5px;
+}
+
+#message{
+    /* set width */
+    width: 95%;
+    /* set border */
+    border: 1px solid #334a40;
+    /* set border radius */
+    border-radius: 5px;
+    /* set background color */
+    background-color: #b6edda;
+    /* set margin */
+    margin: 0 auto;
+    /* set padding */
+    padding: 10px;
+    /* set overflow */
+    overflow: auto;
+}
+
+#send{
+    /* set width */
+    width: 10%;
+    /* set border */
+    border: 1px solid #334a40;
+    /* set border radius */
+    border-radius: 5px;
+    /* set background color */
+    background-color: #b6edda;
+    /* set margin */
+    margin: 0 auto;
+    /* set padding */
+    padding: 10px;
+    /* set overflow */
+    overflow: auto;
+}
+

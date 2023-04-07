@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Web Page</title>
+    <title>Chat</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
 </head>
+
 <body>
-    <h1>My First Web Page</h1>
-    <p>My first paragraph.</p>
+    <div id="menu"></div>
+
+    <div id="chat">
+        <div id="chat_history"></div>
+        <div class="msg_current">
+            <textarea id="message" placeholder="Enter your message"></textarea>
+            <!-- <button id="send" onclick=on_send_button()>Send</button> -->
+        </div>
+    </div>
+    <div id="app"> </div>
 </body>
 </html>
