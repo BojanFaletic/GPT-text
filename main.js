@@ -1,28 +1,37 @@
 
 if (false) {
-var is_key_pressed = true;
+    var is_key_pressed = true;
 
-// wait for document to load
-document.addEventListener('DOMContentLoaded', function () {
-    // get app id from html
-    var app = document.getElementById('app');
-    if (is_key_pressed) {
-        app.innerHTML = 'Hello World';
-    }
-    else {
-        app.innerHTML = 'Goodbye World';
-    }
+    // wait for document to load
+    document.addEventListener('DOMContentLoaded', function () {
+        // get app id from html
+        var app = document.getElementById('app');
+        if (is_key_pressed) {
+            app.innerHTML = 'Hello World';
+        }
+        else {
+            app.innerHTML = 'Goodbye World';
+        }
 
-    /*
-    add_chat_message("hello world");
-    add_user_message("no hello world");
-
-    add_chat_message("hello world 2");
-    //add_user_message("no hello world 4");
-    */
-});
+        /*
+        add_chat_message("hello world");
+        add_user_message("no hello world");
+    
+        add_chat_message("hello world 2");
+        //add_user_message("no hello world 4");
+        */
+    });
 }
 
+/* on page load */
+document.addEventListener('DOMContentLoaded', function () {
+    /* add event listener to message when enter is pressed */
+    document.getElementById('message').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            on_send_button();
+        }
+    });
+});
 
 function add_chat_message(text) {
     var chat = document.getElementById('chat_history');
@@ -35,7 +44,13 @@ function add_chat_message(text) {
     msg_icon.alt = 'gpt';
     msg_icon.className = 'msg_icon';
     msg_user.appendChild(msg_icon);
-    var msg_text = document.createTextNode(text);
+
+    // add paragraph
+    var msg_text = document.createElement('p');
+    msg_text.className = 'msg_text';
+    msg_text.innerHTML = text;
+    msg_user.appendChild(msg_text);
+
     msg_user.appendChild(msg_text);
     chat.appendChild(msg_user);
 }
@@ -51,18 +66,23 @@ function add_user_message(text) {
     msg_icon.alt = 'gpt';
     msg_icon.className = 'msg_icon';
     msg_user.appendChild(msg_icon);
-    var msg_text = document.createTextNode(text);
+    
+    // add paragraph
+    var msg_text = document.createElement('p');
+    msg_text.className = 'msg_text';
+    msg_text.innerHTML = text;
     msg_user.appendChild(msg_text);
+
     chat.appendChild(msg_user);
 }
 
 var tmp = 3;
 
-function on_send_button(){
+function on_send_button() {
     // get from text from message
     var msg = document.getElementById('message');
     msg.value = msg.value.trim();
-    
+
     /* check if message is empty */
     if (msg.value == "") {
         return;
