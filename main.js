@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // add event listener to login text box
+    document.getElementById('password').addEventListener('keyup', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            on_login_button();
+        }
+    });
     // initiate all existing accounts
     generate_accounts();
 
@@ -154,13 +160,19 @@ function generate_accounts(){
 
 // login into existing account
 function on_login_button(){
+    let username = accounts[selected_account];
+    let password = document.getElementById("password").value;
+
+    // clear password
+    document.getElementById("password").value = "";
+
+    // check if account is selected
     if (selected_account == -1){
         console.log("No account selected");
         return;
     }
-    let username = accounts[selected_account];
-    let password = document.getElementById("password").value;
-
+    
+    // check if password is correct
     if (password != passwords[selected_account]){
         console.log("Incorrect password");
         return;
