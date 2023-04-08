@@ -152,6 +152,9 @@ function generate_accounts(){
             // update selected account
             selected_account = i;
             document.getElementById("login_section").style.visibility = "visible";
+
+            // hide chat
+            document.getElementById("chat").style.visibility = "hidden";
         }
 
         account_list.appendChild(account);
@@ -180,4 +183,5 @@ function on_login_button(){
 
     console.log("Login: " + username + " " + password);
     document.getElementById("chat").style.visibility = "visible";
+    document.getElementById("login_section").style.visibility = "hidden";
 }
