@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Chat</title>
     <link rel="stylesheet" href="style.css">
@@ -7,7 +8,35 @@
 </head>
 
 <body>
-    <div id="menu"></div>
+    <!-- menu is not yet implemented -->
+    <div id="menu">
+        <button id="menu_button" onclick=on_menu_registration()>Registration</button>
+
+        <!-- registration -->
+        <div id="registration">
+            <input type="text" id="username" placeholder="Profile name">
+            <input type="password" id="password_1" placeholder="Enter your password">
+            <input type="password" id="password_2" placeholder="Repeat your password">
+            <input type="text" id="key" placeholder="Enter Open AI key">
+
+            <button id="register" onclick=on_register_button()>Register</button>
+        </div>
+
+
+        <!-- login -->
+        <div>
+            <!-- list of checkboxes of all existing accounts -->
+            <div id="accounts"></div>
+            <div id="login_section">
+                <input type="password" id="password" placeholder="Enter your password">
+                <button id="login" onclick=on_login_button()>Login</button>
+            </div>
+        </div>
+
+    </div>
+
+
+
 
     <div id="chat">
         <div id="chat_history"></div>
@@ -18,4 +47,5 @@
     </div>
     <div id="app"> </div>
 </body>
+
 </html>

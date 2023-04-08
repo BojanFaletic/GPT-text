@@ -1,27 +1,4 @@
 
-if (false) {
-    var is_key_pressed = true;
-
-    // wait for document to load
-    document.addEventListener('DOMContentLoaded', function () {
-        // get app id from html
-        var app = document.getElementById('app');
-        if (is_key_pressed) {
-            app.innerHTML = 'Hello World';
-        }
-        else {
-            app.innerHTML = 'Goodbye World';
-        }
-
-        /*
-        add_chat_message("hello world");
-        add_user_message("no hello world");
-    
-        add_chat_message("hello world 2");
-        //add_user_message("no hello world 4");
-        */
-    });
-}
 
 /* on page load */
 document.addEventListener('DOMContentLoaded', function () {
@@ -31,8 +8,23 @@ document.addEventListener('DOMContentLoaded', function () {
             on_send_button();
         }
     });
+
+    // initiate all existing accounts
+    generate_accounts();
+
+    // initiate UI
+    init_UI();
 });
 
+// initiate UI
+function init_UI(){
+    document.getElementById("registration").style.visibility = "hidden";
+    document.getElementById("chat").style.visibility = "hidden";
+    document.getElementById("login_section").style.visibility = "hidden";
+}
+
+
+// add bot message to chat
 function add_chat_message(text) {
     var chat = document.getElementById('chat_history');
 
@@ -55,6 +47,7 @@ function add_chat_message(text) {
     chat.appendChild(msg_user);
 }
 
+// add user message to chat
 function add_user_message(text) {
     var chat = document.getElementById('chat_history');
 
@@ -76,8 +69,8 @@ function add_user_message(text) {
     chat.appendChild(msg_user);
 }
 
+// user sends message in chat
 var tmp = 3;
-
 function on_send_button() {
     // get from text from message
     var msg = document.getElementById('message');
@@ -97,4 +90,82 @@ function on_send_button() {
     // add bot message to chat
     add_chat_message("hello world " + tmp);
     tmp += 1;
+}
+
+
+// toggle registration menu
+var is_registration_selected = false;
+function on_menu_registration(){
+    if (is_registration_selected){
+        document.getElementById("registration").style.visibility = "hidden";
+    }
+    else{
+        document.getElementById("registration").style.visibility = "visible";
+    }
+    is_registration_selected = !is_registration_selected;
+}
+
+// Add account to list (TODO)
+function on_register_button(){
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password_1").value;
+    let password_2 = document.getElementById("password_2").value;
+    let open_AI_key = document.getElementById("key").value;
+
+    if (password != password_2){
+        alert("Passwords do not match");
+        return;
+    }
+    
+    console.log("OpenAI key: " + open_AI_key);    
+}
+
+// list of accounts (needs to be stored in database)
+var accounts = ["account1", "account2", "account3"]
+var passwords = ["p1", "p2", "p3"]
+var selected_account = -1;
+
+function generate_accounts(){
+    let account_list = document.getElementById("accounts");
+
+    for (let i = 0; i < accounts.length; i++){
+        let account = document.createElement("button");
+        account.type = "text";
+        account.id = accounts[i];
+        account.innerHTML = accounts[i];
+
+        account.style.backgroundColor = "#FFFFFF";
+        account.onclick = function(){
+            // change color of selected account
+            if (selected_account != -1){
+                document.getElementById(accounts[selected_account]).style.backgroundColor = "#FFFFFF";
+            }
+            // change color of new account
+            account.style.backgroundColor = "#00FF00";   
+            
+            // update selected account
+            selected_account = i;
+            document.getElementById("login_section").style.visibility = "visible";
+        }
+
+        account_list.appendChild(account);
+    }
+}
+
+// login into existing account
+function on_login_button(){
+    if (selected_account == -1){
+        console.log("No account selected");
+        return;
+    }
+    let username = accounts[selected_account];
+    let password = document.getElementById("password").value;
+
+    if (password != passwords[selected_account]){
+        console.log("Incorrect password");
+        return;
+    }
+
+    console.log("Login: " + username + " " + password);
+    document.getElementById("chat").style.visibility = "visible";
 }
