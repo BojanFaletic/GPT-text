@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="style.css">
     <script src="build/pdf.js"></script>
     <script src="main.js"></script>
+    <script src="key.js"></script>
+    <script src="openai.js"></script>
 </head>
 
 <body>
@@ -44,9 +46,9 @@
             <button id="upload_button" onclick=on_upload_button()>Upload</button>
         </div>
 
+        <div id="pdf_list"></div>
         <div id="text-container"></div>
     </div>
-
 
     <!-- chat -->
     <div id="chat">

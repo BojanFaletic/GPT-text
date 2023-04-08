@@ -217,6 +217,11 @@ function on_upload_button() {
                             // append text to chat
                             const file_name = file.name;
                             pdf_data[file_name] = textContent.join('\n');
+
+                            // add HTML div to id = pdf_list
+                            const pdf_list = document.getElementById("pdf_list");
+                            pdf_list.innerHTML += "<div class='pdf' id='" + file_name + "'>" + file_name + "</div>";
+                            
                         }
                     });
                 });
