@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // initiate UI
-function init_UI(){
+function init_UI() {
     document.getElementById("registration").style.visibility = "hidden";
     document.getElementById("chat").style.visibility = "hidden";
     document.getElementById("login_section").style.visibility = "hidden";
@@ -65,7 +65,7 @@ function add_user_message(text) {
     msg_icon.alt = 'gpt';
     msg_icon.className = 'msg_icon';
     msg_user.appendChild(msg_icon);
-    
+
     // add paragraph
     var msg_text = document.createElement('p');
     msg_text.className = 'msg_text';
@@ -101,29 +101,29 @@ function on_send_button() {
 
 // toggle registration menu
 var is_registration_selected = false;
-function on_menu_registration(){
-    if (is_registration_selected){
+function on_menu_registration() {
+    if (is_registration_selected) {
         document.getElementById("registration").style.visibility = "hidden";
     }
-    else{
+    else {
         document.getElementById("registration").style.visibility = "visible";
     }
     is_registration_selected = !is_registration_selected;
 }
 
 // Add account to list (TODO)
-function on_register_button(){
+function on_register_button() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password_1").value;
     let password_2 = document.getElementById("password_2").value;
     let open_AI_key = document.getElementById("key").value;
 
-    if (password != password_2){
+    if (password != password_2) {
         alert("Passwords do not match");
         return;
     }
-    
-    console.log("OpenAI key: " + open_AI_key);    
+
+    console.log("OpenAI key: " + open_AI_key);
 }
 
 // list of accounts (needs to be stored in database)
@@ -131,24 +131,24 @@ var accounts = ["account1", "account2", "account3"]
 var passwords = ["p1", "p2", "p3"]
 var selected_account = -1;
 
-function generate_accounts(){
+function generate_accounts() {
     let account_list = document.getElementById("accounts");
 
-    for (let i = 0; i < accounts.length; i++){
+    for (let i = 0; i < accounts.length; i++) {
         let account = document.createElement("button");
         account.type = "text";
         account.id = accounts[i];
         account.innerHTML = accounts[i];
 
         account.style.backgroundColor = "#FFFFFF";
-        account.onclick = function(){
+        account.onclick = function () {
             // change color of selected account
-            if (selected_account != -1){
+            if (selected_account != -1) {
                 document.getElementById(accounts[selected_account]).style.backgroundColor = "#FFFFFF";
             }
             // change color of new account
-            account.style.backgroundColor = "#00FF00";   
-            
+            account.style.backgroundColor = "#00FF00";
+
             // update selected account
             selected_account = i;
             document.getElementById("login_section").style.visibility = "visible";
@@ -162,7 +162,7 @@ function generate_accounts(){
 }
 
 // login into existing account
-function on_login_button(){
+function on_login_button() {
     let username = accounts[selected_account];
     let password = document.getElementById("password").value;
 
@@ -170,13 +170,13 @@ function on_login_button(){
     document.getElementById("password").value = "";
 
     // check if account is selected
-    if (selected_account == -1){
+    if (selected_account == -1) {
         console.log("No account selected");
         return;
     }
-    
+
     // check if password is correct
-    if (password != passwords[selected_account]){
+    if (password != passwords[selected_account]) {
         console.log("Incorrect password");
         return;
     }
@@ -184,4 +184,49 @@ function on_login_button(){
     console.log("Login: " + username + " " + password);
     document.getElementById("chat").style.visibility = "visible";
     document.getElementById("login_section").style.visibility = "hidden";
+}
+
+
+let pdf_data = {};
+
+function on_upload_button() {
+    console.log("Upload button pressed");
+
+    // get file
+    let file = document.getElementById("file").files[0];
+
+    // check if file is selected
+    if (file == null) {
+        console.log("No file selected");
+        return;
+    }
+
+    // read file as PDF
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const pdfData = new Uint8Array(event.target.result);
+        pdfjsLib.getDocument(pdfData).promise.then(function (pdf) {
+            const textContent = [];
+            for (let i = 1; i <= pdf.numPages; i++) {
+                pdf.getPage(i).then(function (page) {
+                    page.getTextContent().then(function (content) {
+                        content.items.forEach(function (item) {
+                            textContent.push(item.str);
+                        });
+                        if (i === pdf.numPages) {
+                            // append text to chat
+                            const file_name = file.name;
+                            pdf_data[file_name] = textContent.join('\n');
+                        }
+                    });
+                });
+            }
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function displayText(text) {
+    const textContainer = document.getElementById('text-container');
+    textContainer.innerText = text;
 }

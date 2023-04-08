@@ -4,6 +4,7 @@
 <head>
     <title>Chat</title>
     <link rel="stylesheet" href="style.css">
+    <script src="build/pdf.js"></script>
     <script src="main.js"></script>
 </head>
 
@@ -35,9 +36,19 @@
 
     </div>
 
+    <!-- PDF -->
+    <div id="pdf">
+        <!-- upload button -->
+        <div id="upload">
+            <input type="file" id="file" accept="application/pdf">
+            <button id="upload_button" onclick=on_upload_button()>Upload</button>
+        </div>
+
+        <div id="text-container"></div>
+    </div>
 
 
-
+    <!-- chat -->
     <div id="chat">
         <div id="chat_history"></div>
         <div class="msg_current">
