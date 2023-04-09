@@ -30,6 +30,11 @@ function temporary_clear(){
 function permanent_init(){
     permanent_clear();
 
+    // TODO: password should be hashed
+    /*
+    var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase");​
+    var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
+    */
     const account = {"account1": "p1", "account2": "p2", "account3": "p3"};
     permanent_store("accounts", JSON.stringify(account));
 }
