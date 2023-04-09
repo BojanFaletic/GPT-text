@@ -1,34 +1,5 @@
 
 
-/* on page load */
-document.addEventListener('DOMContentLoaded', function () {
-    /* add event listener to message when enter is pressed */
-    document.getElementById('message').addEventListener('keyup', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            on_send_button();
-        }
-    });
-
-    // add event listener to login text box
-    document.getElementById('password').addEventListener('keyup', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            on_login_button();
-        }
-    });
-    // initiate all existing accounts
-    generate_accounts();
-
-    // initiate UI
-    init_UI();
-});
-
-// initiate UI
-function init_UI() {
-    document.getElementById("registration").style.visibility = "hidden";
-    document.getElementById("chat").style.visibility = "hidden";
-    document.getElementById("login_section").style.visibility = "hidden";
-}
-
 
 // add bot message to chat
 function add_chat_message(text) {
@@ -102,12 +73,6 @@ function on_send_button() {
 // toggle registration menu
 var is_registration_selected = false;
 function on_menu_registration() {
-    if (is_registration_selected) {
-        document.getElementById("registration").style.visibility = "hidden";
-    }
-    else {
-        document.getElementById("registration").style.visibility = "visible";
-    }
     is_registration_selected = !is_registration_selected;
 }
 
@@ -151,10 +116,6 @@ function generate_accounts() {
 
             // update selected account
             selected_account = i;
-            document.getElementById("login_section").style.visibility = "visible";
-
-            // hide chat
-            document.getElementById("chat").style.visibility = "hidden";
         }
 
         account_list.appendChild(account);
@@ -182,8 +143,6 @@ function on_login_button() {
     }
 
     console.log("Login: " + username + " " + password);
-    document.getElementById("chat").style.visibility = "visible";
-    document.getElementById("login_section").style.visibility = "hidden";
 }
 
 
@@ -221,7 +180,7 @@ function on_upload_button() {
                             // add HTML div to id = pdf_list
                             const pdf_list = document.getElementById("pdf_list");
                             pdf_list.innerHTML += "<div class='pdf' id='" + file_name + "'>" + file_name + "</div>";
-                            
+
                         }
                     });
                 });
