@@ -48,11 +48,44 @@ function chat_menu() {
         .then(response => response.text())
         .then(data => {
             document.getElementById("app").innerHTML = data;
-        });
 
-    document.getElementById('message').addEventListener('keyup', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            on_send_button();
-        }
+            document.getElementById('message').addEventListener('keyup', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    on_send_button();
+                }
+        });
     });
+}
+
+function history_menu() {
+    fetch('pages/history.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("app").innerHTML = data;
+        });
+}
+
+function logout_menu() {
+    fetch('pages/logout.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("app").innerHTML = data;
+        }
+    );
+
+    // clear session storage
+    temporary_clear();
+
+    // change login menu
+    let login_button = document.getElementById("menu_login");
+    login_button.innerHTML = "Login";
+}
+
+function delete_menu() {
+    fetch('pages/delete.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("app").innerHTML = data;
+        }
+    );
 }

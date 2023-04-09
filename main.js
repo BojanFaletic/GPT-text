@@ -131,6 +131,10 @@ function on_login_button() {
     }
 
     console.log("Login: " + selected_account + " " + password);
+
+    // change login button to user name
+    let login_button = document.getElementById("menu_login");
+    login_button.innerHTML = selected_account;
 }
 
 
