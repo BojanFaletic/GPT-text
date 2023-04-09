@@ -1,7 +1,11 @@
 
 // on page load
 document.addEventListener('DOMContentLoaded', function () {
-    login_menu();    
+    // initialize storage
+    permanent_init();
+    temporary_init();
+
+    login_menu();
 });
 
 
@@ -18,18 +22,17 @@ function login_menu() {
         .then(response => response.text())
         .then(data => {
             document.getElementById("app").innerHTML = data;
+
+            // add event listener to password field
+            document.getElementById('password').addEventListener('keyup', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    on_login_button();
+                }
+            });
+
+            // initiate all existing accounts
+            generate_accounts();
         });
-
-
-    // initiate all existing accounts
-    generate_accounts();
-
-    // add event listener to password field
-    document.getElementById('password').addEventListener('keyup', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            on_login_button();
-        }
-    });
 }
 
 function pdf_menu() {

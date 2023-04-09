@@ -1,6 +1,3 @@
-
-
-
 // add bot message to chat
 function add_chat_message(text) {
     var chat = document.getElementById('chat_history');
@@ -91,58 +88,49 @@ function on_register_button() {
     console.log("OpenAI key: " + open_AI_key);
 }
 
-// list of accounts (needs to be stored in database)
-var accounts = ["account1", "account2", "account3"]
-var passwords = ["p1", "p2", "p3"]
-var selected_account = -1;
-
 function generate_accounts() {
     let account_list = document.getElementById("accounts");
+    const accounts = JSON.parse(permanent_retrieve("accounts"));
+    let id = 0;
 
-    for (let i = 0; i < accounts.length; i++) {
-        let account = document.createElement("button");
-        account.type = "text";
-        account.id = accounts[i];
-        account.innerHTML = accounts[i];
+    for (let account in accounts) {
+        let button = document.createElement("button");
+        button.type = "text";
+        button.id = id;
+        button.innerHTML = account;
 
-        account.style.backgroundColor = "#FFFFFF";
-        account.onclick = function () {
-            // change color of selected account
-            if (selected_account != -1) {
-                document.getElementById(accounts[selected_account]).style.backgroundColor = "#FFFFFF";
-            }
-            // change color of new account
-            account.style.backgroundColor = "#00FF00";
-
-            // update selected account
-            selected_account = i;
+        // when button is clicked select the account
+        button.onclick = function() {
+            temporary_store("selected_account", account);
         }
 
-        account_list.appendChild(account);
-    }
+        account_list.appendChild(button);
+        id += 1;
+    }    
 }
 
 // login into existing account
 function on_login_button() {
-    let username = accounts[selected_account];
+    let selected_account = temporary_retrieve("selected_account");
     let password = document.getElementById("password").value;
 
     // clear password
     document.getElementById("password").value = "";
 
     // check if account is selected
-    if (selected_account == -1) {
+    if (!selected_account) {
         console.log("No account selected");
         return;
     }
 
     // check if password is correct
-    if (password != passwords[selected_account]) {
+    const account_passwords = JSON.parse(permanent_retrieve("accounts"));
+    if (password != account_passwords[selected_account]) {
         console.log("Incorrect password");
         return;
     }
 
-    console.log("Login: " + username + " " + password);
+    console.log("Login: " + selected_account + " " + password);
 }
 
 
