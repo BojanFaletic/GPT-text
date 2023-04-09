@@ -8,57 +8,24 @@
     <script src="main.js"></script>
     <script src="key.js"></script>
     <script src="openai.js"></script>
+    <script src="app.js"></script>
 </head>
 
 <body>
-    <!-- menu is not yet implemented -->
-    <div id="menu">
-        <button id="menu_button" onclick=on_menu_registration()>Registration</button>
-
-        <!-- registration -->
-        <div id="registration">
-            <input type="text" id="username" placeholder="Profile name">
-            <input type="password" id="password_1" placeholder="Enter your password">
-            <input type="password" id="password_2" placeholder="Repeat your password">
-            <input type="text" id="key" placeholder="Enter Open AI key">
-
-            <button id="register" onclick=on_register_button()>Register</button>
-        </div>
-
-
-        <!-- login -->
-        <div>
-            <!-- list of checkboxes of all existing accounts -->
-            <div id="accounts"></div>
-            <div id="login_section">
-                <input type="password" id="password" placeholder="Enter your password">
-                <button id="login" onclick=on_login_button()>Login</button>
-            </div>
-        </div>
-
+    <div id="header">
+        <button id="menu_login" onclick=login_menu()>Login</button>
+        <button id="menu_registration" onclick=registration_menu()>Registration</button>
+        <button id="menu_pdf" onclick=pdf_menu()>PDF</button>
+        <button id="menu_chat" onclick=chat_menu()>Chat</button>
+        <button id="menu_history" onclick=history_menu()>History</button>
+        <button id="menu_logout" onclick=logout_menu()>Logout</button>
+        <button id="menu_delete" onclick=delete_menu()>Delete</button>
     </div>
 
-    <!-- PDF -->
-    <div id="pdf">
-        <!-- upload button -->
-        <div id="upload">
-            <input type="file" id="file" accept="application/pdf">
-            <button id="upload_button" onclick=on_upload_button()>Upload</button>
-        </div>
+    <br>
 
-        <div id="pdf_list"></div>
-        <div id="text-container"></div>
-    </div>
+    <div id="app"></div>
 
-    <!-- chat -->
-    <div id="chat">
-        <div id="chat_history"></div>
-        <div class="msg_current">
-            <textarea id="message" placeholder="Enter your message"></textarea>
-            <!-- <button id="send" onclick=on_send_button()>Send</button> -->
-        </div>
-    </div>
-    <div id="app"> </div>
 </body>
 
 </html>
