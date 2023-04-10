@@ -101,7 +101,7 @@ function on_send_button() {
     });
 }
 
-// Add account to list (TODO)
+// Add account to list
 function on_register_button() {
     const username = document.getElementById("username").value;
     let password = document.getElementById("password_1").value;
@@ -137,9 +137,9 @@ function on_register_button() {
     console.log(open_AI_key);
     temporary_store("open_AI_key", open_AI_key);
     get_valid_account().then((response) => {
-        temporary_store("valid_account", response != null);
 
-        
+        // check if account is valid
+        temporary_store("valid_account", response != null);
         if (temporary_retrieve("valid_account") == "false") {
             alert("Invalid API key");
             return;
@@ -167,6 +167,7 @@ function on_register_button() {
     });
 }
 
+// create account menu
 function generate_accounts() {
     let account_list = document.getElementById("accounts");
     const accounts = JSON.parse(permanent_retrieve("accounts"));
@@ -242,6 +243,7 @@ function on_login_button() {
     return;
 }
 
+// delete account
 function on_delete_button() {
     // get selected account
     let selected_account = temporary_retrieve("selected_account");
@@ -264,8 +266,7 @@ function on_delete_button() {
 }
 
 
-let pdf_data = {};
-
+// upload file
 function on_upload_button() {
     console.log("Upload button pressed");
 
@@ -293,13 +294,16 @@ function on_upload_button() {
                         if (i === pdf.numPages) {
                             // append text to chat
                             const file_name = file.name;
+                            pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
+                            if (pdf_data == null) {
+                                pdf_data = {};
+                            }
                             pdf_data[file_name] = textContent.join('\n');
+                            permanent_store("pdf_data", JSON.stringify(pdf_data));
 
-                            // add HTML div to id = pdf_list
-                            const pdf_list = document.getElementById("pdf_list");
-                            pdf_list.innerHTML += "<div class='pdf' id='" + file_name + "'>" + file_name + "</div>";
-
-                        }
+                            // draw pdf
+                            draw_pdf();
+                        };
                     });
                 });
             }
@@ -308,7 +312,67 @@ function on_upload_button() {
     reader.readAsArrayBuffer(file);
 }
 
-function displayText(text) {
+// delete pdf
+function on_delete_pdf(){
+    // get selected pdf
+    let selected_pdf = temporary_retrieve("selected_pdf");
+
+    // check if pdf is selected
+    if (!selected_pdf) {
+        console.log("No pdf selected");
+        return;
+    }
+
+    // delete pdf
+    let pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
+    delete pdf_data[selected_pdf];
+    permanent_store("pdf_data", JSON.stringify(pdf_data));
+    temporary_store("selected_pdf", "");
+
+    // reload pdfs
+    draw_pdf();
+}
+
+function draw_pdf() {
+    // add HTML div to id = pdf_list
+    const pdf_list = document.getElementById("pdf_list");
+    pdf_list.innerHTML = "";
+
+    const pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
+    for (file_name in pdf_data) {
+
+        // insert button
+        var button = document.createElement("button");
+        button.type = "text";
+        button.id = file_name;
+        button.innerHTML = file_name;
+        button.className = "pdf_buttons";
+        pdf_list.appendChild(button);
+    }
+
+    // add onclick event to buttons
+    const buttons = document.getElementsByClassName("pdf_buttons");
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function () {
+            // clear all buttons
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].style.backgroundColor = "white";
+            }
+
+            // set selected pdf
+            temporary_store("selected_pdf", buttons[i].id);
+            buttons[i].style.backgroundColor = "lightblue";
+
+            // display text
+            displayText();
+        }
+    }
+}
+
+function displayText() {
+    const selected_pdf = temporary_retrieve("selected_pdf");
+    const pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
+
     const textContainer = document.getElementById('text-container');
-    textContainer.innerText = text;
+    textContainer.innerText = pdf_data[selected_pdf];
 }

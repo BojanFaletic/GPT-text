@@ -45,6 +45,9 @@ function pdf_menu() {
         .then(response => response.text())
         .then(data => {
             document.getElementById("app").innerHTML = data;
+
+            // load pdfs
+            draw_pdf();
         });
 }
 
