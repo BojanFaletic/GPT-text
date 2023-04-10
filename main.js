@@ -48,7 +48,7 @@ function add_user_message(text) {
 }
 
 // load chat trees from local storage
-function load_current_chat_tree(){
+function load_current_chat_tree() {
     const chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
     if (chat_trees == null) {
         return;
@@ -67,8 +67,14 @@ function load_current_chat_tree(){
 function on_send_button() {
     // get from text from message
     var msg = document.getElementById('message');
-    const question  = msg.value.trim();
+    const question = msg.value.trim();
     msg.value = "";
+
+    // check if api key is valid
+    if (temporary_retrieve("valid_account") == "false") {
+        msg.value = "Your API key is invalid. Please register a new account."
+        return;
+    }
 
     /* check if message is empty */
     if (question == "") {
@@ -77,13 +83,16 @@ function on_send_button() {
 
     // add user message to chat
     add_user_message(question);
-   
+
     // add bot message to chat
     ask_gpt(question).then((response) => {
         add_chat_message(response);
 
         // add response to history
         var chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
+        if (chat_trees == null) {
+            chat_trees = [];
+        }
         chat_trees.push(question);
         chat_trees.push(response);
         temporary_store("chat_trees", JSON.stringify(chat_trees));
@@ -124,22 +133,38 @@ function on_register_button() {
         return;
     }
 
-    // hash password
-    var sha = CryptoJS.SHA256(password);
-    var sha_password = sha.toString();
+    // check if account is valid
+    console.log(open_AI_key);
+    temporary_store("open_AI_key", open_AI_key);
+    get_valid_account().then((response) => {
+        temporary_store("valid_account", response != null);
 
-    var encrypted_password = CryptoJS.AES.encrypt(open_AI_key, password);
-    var encoded_password = encrypted_password.toString();
+        
+        if (temporary_retrieve("valid_account") == "false") {
+            alert("Invalid API key");
+            return;
+        }
 
-    // add account to list
-    users[username] = [sha_password, encoded_password];
-    permanent_store("accounts", JSON.stringify(users));
-    temporary_store("selected_account", username);
 
-    // clear registration menu
-    document.getElementById("menu").innerHTML = "";
-    display_menu();
-    chat_menu();
+        // hash password
+        var sha = CryptoJS.SHA256(password);
+        var sha_password = sha.toString();
+
+        var encrypted_password = CryptoJS.AES.encrypt(open_AI_key, password);
+        var encoded_password = encrypted_password.toString();
+
+        // add account to list
+        users[username] = [sha_password, encoded_password];
+        permanent_store("accounts", JSON.stringify(users));
+        temporary_store("selected_account", username);
+
+
+        // clear registration menu
+        document.getElementById("menu").innerHTML = "";
+        display_menu();
+        chat_menu();
+
+    });
 }
 
 function generate_accounts() {
@@ -197,23 +222,30 @@ function on_login_button() {
     if (password_hash == stored_password_hash) {
         // store open AI key
         const encrypted_key = account_blob[selected_account][1];
-        var key = CryptoJS.AES.decrypt(encrypted_key, password);
-        temporary_store("open_AI_key", key.toString(CryptoJS.enc.Utf8));
+        const key_blob = CryptoJS.AES.decrypt(encrypted_key, password);
+        const key = key_blob.toString(CryptoJS.enc.Utf8);
+
+        temporary_store("open_AI_key", key);
+
+        // check if key is valid
+        get_valid_account().then((response) => {
+            temporary_store("valid_account", response != null);
+        });
 
         // clear app div 
         app = document.getElementById("app");
         app.innerHTML = "";
-        return true;        
+        return true;
     }
 
     console.log("Incorrect password");
     return;
 }
 
-function on_delete_button(){
+function on_delete_button() {
     // get selected account
     let selected_account = temporary_retrieve("selected_account");
-    
+
     // check if account is selected
     if (!selected_account) {
         console.log("No account selected");

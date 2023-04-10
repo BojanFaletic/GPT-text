@@ -11,14 +11,18 @@ async function ask_gpt(question) {
 
     // make chat history
     const chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
-    if (chat_trees.length % 2 != 0) {
-        console.log("Error: chat_trees is not even");
-        return;
-    }
     var message = [];
-    for (let i = 0; i < chat_trees.length; i++) {
-        const role = i%2 == 0 ? "user" : "assistant";
-        message.push({ "role": role, "content": chat_trees[i]});
+    // add previous chat history
+    if (chat_trees != null) {
+        if (chat_trees.length % 2 != 0) {
+            console.log("Error: chat_trees is not even");
+            return;
+        }    
+  
+        for (let i = 0; i < chat_trees.length; i++) {
+            const role = i%2 == 0 ? "user" : "assistant";
+            message.push({ "role": role, "content": chat_trees[i]});
+        }
     }
     // add current question to chat history
     message.push({ "role": "user", "content": question }); 
@@ -65,7 +69,7 @@ async function get_embedding(text) {
 }
 
 // Check if the OpenAI key is valid
-function get_valid_account() {
+async function get_valid_account() {
     const API_ENDPOINT = 'https://api.openai.com/v1/models';
     const key = temporary_retrieve("open_AI_key");
 
@@ -74,17 +78,14 @@ function get_valid_account() {
         'Authorization': `Bearer ${key}`
     };
 
-    fetch(API_ENDPOINT, {
+    const request = fetch(API_ENDPOINT, {
         method: 'GET',
         headers: requestHeaders,
-    })
-        .then(response => response.json())
-        .then(data => {
-            return true;
-        })
-        .catch(error => {
-            return false;
-        });
+    });
+
+    const response = await request;
+    const data = await response.json();
+    return data.data;
 }
 
 /*

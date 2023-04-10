@@ -28,7 +28,7 @@ function temporary_clear() {
 
 function permanent_init() {
     // [username] = [password, openAI_key]
-    fetch("preset_accounts.json")
+    fetch("private/preset_accounts.json")
         .then(response => response.json())
         .then(data => {
             permanent_clear();
@@ -45,9 +45,10 @@ function temporary_init() {
     const selected_account = "";
     temporary_store("selected_account", selected_account);
     temporary_store("open_AI_key", "");
+    temporary_store("valid_account", false);
 
     // chat trees
-    fetch("current_chain.json")
+    fetch("private/current_chain.json")
         .then(response => response.json())
         .then(data => {
             temporary_store("chat_trees", JSON.stringify(data));
