@@ -5,9 +5,28 @@ document.addEventListener('DOMContentLoaded', function () {
     permanent_init();
     temporary_init();
 
-    login_menu();
+    chat_menu();
 });
 
+
+function login_page(){
+    fetch('pages/first_page.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("menu").innerHTML = data;
+
+            // account_list
+            generate_accounts();
+        });
+}
+
+function display_menu() {
+    fetch('pages/menu.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("app").innerHTML = data;
+        });
+}
 
 function registration_menu() {
     fetch('pages/registration.html')

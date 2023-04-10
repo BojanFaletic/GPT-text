@@ -131,10 +131,14 @@ function on_login_button() {
     }
 
     console.log("Login: " + selected_account + " " + password);
+    
+    // clear app div 
+    const app = document.getElementById("app");
+    app.innerHTML = "";
 
-    // change login button to user name
-    let login_button = document.getElementById("menu_login");
-    login_button.innerHTML = selected_account;
+    //chat_menu();
+    //display_menu();
+    // switch to chat menu
 }
 
 
