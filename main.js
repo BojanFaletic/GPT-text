@@ -75,7 +75,7 @@ function on_menu_registration() {
 
 // Add account to list (TODO)
 function on_register_button() {
-    let username = document.getElementById("username").value;
+    const username = document.getElementById("username").value;
     let password = document.getElementById("password_1").value;
     let password_2 = document.getElementById("password_2").value;
     let open_AI_key = document.getElementById("key").value;
@@ -85,7 +85,27 @@ function on_register_button() {
         return;
     }
 
-    console.log("OpenAI key: " + open_AI_key);
+    // hash password
+    var sha = CryptoJS.SHA256(password);
+    var sha_password = sha.toString();
+
+    var encrypted_password = CryptoJS.AES.encrypt(open_AI_key, password);
+    var encoded_password = encrypted_password.toString();
+
+    users = JSON.parse(permanent_retrieve("accounts"))
+    if (users == null) {
+        users = {};
+    }
+    users[username] = [sha_password, encoded_password];
+    permanent_store("accounts", JSON.stringify(users));
+
+    temporary_store("selected_account", username);
+
+    // clear registration menu
+    document.getElementById("menu").innerHTML = "";
+    display_menu();
+    chat_menu();
+
 }
 
 function generate_accounts() {
@@ -103,7 +123,7 @@ function generate_accounts() {
         button.className = "account_button";
 
         // when button is clicked select the account
-        button.onclick = function() {
+        button.onclick = function () {
             // clear all buttons
             let buttons = document.getElementsByClassName("account_button");
             for (let i = 0; i < buttons.length; i++) {
@@ -117,7 +137,7 @@ function generate_accounts() {
 
         account_list.appendChild(button);
         id += 1;
-    }    
+    }
 }
 
 // login into existing account
@@ -134,22 +154,34 @@ function on_login_button() {
         return;
     }
 
+    /* decode 
+        var decrypted_password = CryptoJS.AES.decrypt(encoded_password, password);
+        var decoded_password = decrypted_password.toString(CryptoJS.enc.Utf8);
+
+        console.log("decoded_password: " + decoded_password);
+    */
+
+    const password_hash = CryptoJS.SHA256(password).toString();
+
+
     // check if password is correct
-    const account_passwords = JSON.parse(permanent_retrieve("accounts"));
-    if (password != account_passwords[selected_account]) {
-        console.log("Incorrect password");
-        return;
+    const account_blob = JSON.parse(permanent_retrieve("accounts"));
+    const stored_password_hash = account_blob[selected_account][0];
+
+    if (password_hash == stored_password_hash) {
+        console.log("Login: " + selected_account + " " + password);
+
+        // clear app div 
+        app = document.getElementById("app");
+        app.innerHTML = "";
+    
+        console.log("here");
+        return true;        
     }
 
-    console.log("Login: " + selected_account + " " + password);
-    
-    // clear app div 
-    app = document.getElementById("app");
-    app.innerHTML = ""; 
+    console.log("Incorrect password");
+    return;
 
-    console.log("here");
-
-    return true;
 }
 
 
