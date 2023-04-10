@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     permanent_init();
     temporary_init();
 
-    chat_menu();
+    console.log("App loaded");
+    login_page();
 });
 
 
@@ -17,6 +18,17 @@ function login_page(){
 
             // account_list
             generate_accounts();
+
+            // add event listener to password field
+            document.getElementById('password').addEventListener('keyup', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    if (on_login_button()) {
+                        document.getElementById("menu").innerHTML = "";
+                        display_menu();
+                        chat_menu();
+                    }
+                }
+            });
         });
 }
 
@@ -24,33 +36,7 @@ function display_menu() {
     fetch('pages/menu.html')
         .then(response => response.text())
         .then(data => {
-            document.getElementById("app").innerHTML = data;
-        });
-}
-
-function registration_menu() {
-    fetch('pages/registration.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("app").innerHTML = data;
-        });
-}
-
-function login_menu() {
-    fetch('pages/login.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("app").innerHTML = data;
-
-            // add event listener to password field
-            document.getElementById('password').addEventListener('keyup', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    on_login_button();
-                }
-            });
-
-            // initiate all existing accounts
-            generate_accounts();
+            document.getElementById("menu").innerHTML = data;
         });
 }
 

@@ -110,11 +110,34 @@ body {
 }
 
 #header{
-    background-color: #b482c3;
+    background-color: #716874;
     border: 1px solid #334a40;
     border-radius: 5px;
     color: #fff;
     padding: 10px;
     margin-right: 10px;
     margin-top: 10px;
+}
+
+#login_page{
+    background-color: #5b5a5c;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+
+    width: 500px;
+
+}
+
+#login_section
+{
+    /* set width */
+    background-color: #b482c3;
+}
+
+#registration{
+    background-color: #575ca7;
 }

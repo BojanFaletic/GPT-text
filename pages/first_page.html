@@ -1,24 +1,30 @@
 <!-- login -->
-<div>
-    <div id="login_section"> Login as:
-        <div id="accounts"></div>
-        <div id="login_section">
-            <input type="password" id="password" placeholder="Enter your password">
-            <button id="login" onclick=on_login_button()>Login</button>
+<div id="login_page">
+    Login to your account:
+    <hr>
+    <div id="login_section">
+        Login into existing account:
+        <div>
+            <div id="accounts"></div>
+            <div id="login_section">
+                <input type="password" id="password" placeholder="Enter your password">
+                <button id="login" onclick=on_login_button()>Login</button>
+            </div>
         </div>
     </div>
 
-    <!-- horizontal line -->
-    <div> ------------------ </div>
+    <hr>
 
-    <div> Create new account </div>
     <!-- registration -->
     <div id="registration">
-        <input type="text" id="username" placeholder="Profile name">
-        <input type="password" id="password_1" placeholder="Enter your password">
-        <input type="password" id="password_2" placeholder="Repeat your password">
-        <input type="text" id="key" placeholder="Enter Open AI key">
+        Create new account:
+        <div>
+            <input type="text" id="username" placeholder="Profile name">
+            <input type="password" id="password_1" placeholder="Enter your password">
+            <input type="password" id="password_2" placeholder="Repeat your password">
+            <input type="text" id="key" placeholder="Enter Open AI key">
 
-        <button id="register" onclick=on_register_button()>Register</button>
+            <button id="register" onclick=on_register_button()>Register</button>
+        </div>
     </div>
 </div>

@@ -99,9 +99,20 @@ function generate_accounts() {
         button.id = id;
         button.innerHTML = account;
 
+        // set class
+        button.className = "account_button";
+
         // when button is clicked select the account
         button.onclick = function() {
+            // clear all buttons
+            let buttons = document.getElementsByClassName("account_button");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].style.backgroundColor = "white";
+            }
+
             temporary_store("selected_account", account);
+            button.style.backgroundColor = "lightblue";
+
         }
 
         account_list.appendChild(button);
@@ -133,12 +144,12 @@ function on_login_button() {
     console.log("Login: " + selected_account + " " + password);
     
     // clear app div 
-    const app = document.getElementById("app");
-    app.innerHTML = "";
+    app = document.getElementById("app");
+    app.innerHTML = ""; 
 
-    //chat_menu();
-    //display_menu();
-    // switch to chat menu
+    console.log("here");
+
+    return true;
 }
 
 
