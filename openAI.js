@@ -10,6 +10,7 @@ async function ask_gpt(question) {
 
     const message = [{ "role": "user", "content": question }];
 
+    // TODO set temperature to 0
     const requestData = {
         model: 'gpt-3.5-turbo',
         messages: message,
@@ -34,7 +35,7 @@ async function get_embedding(text) {
         "input": text,
         "model": "text-embedding-ada-002"
     };
-    
+
     const options = {
         method: 'POST',
         headers: {
@@ -47,6 +48,28 @@ async function get_embedding(text) {
     const request = await fetch(API_ENDPOINT, options);
     const response = await request.json();
     return response.data[0].embedding;
+}
+
+// Check if the OpenAI key is valid
+function get_valid_account(key) {
+    const API_ENDPOINT = 'https://api.openai.com/v1/models';
+
+    const requestHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`
+    };
+
+    fetch(API_ENDPOINT, {
+        method: 'GET',
+        headers: requestHeaders,
+    })
+        .then(response => response.json())
+        .then(data => {
+            return true;
+        })
+        .catch(error => {
+            return false;
+        });
 }
 
 /*

@@ -72,6 +72,8 @@ function history_menu() {
 
 function logout_menu() {
     temporary_clear();
+    // clear chat
+    document.getElementById("app").innerHTML = "";
     login_page();
 }
 
