@@ -11,10 +11,10 @@ async function ask_gpt(question) {
 
     const message = [{ "role": "user", "content": question }];
 
-    // TODO set temperature to 0
     const requestData = {
         model: 'gpt-3.5-turbo',
         messages: message,
+        temperature: 0.0,
     };
 
     const request = fetch(API_ENDPOINT, {

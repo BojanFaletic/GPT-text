@@ -44,26 +44,26 @@ function add_user_message(text) {
 }
 
 // user sends message in chat
-var tmp = 3;
 function on_send_button() {
     // get from text from message
     var msg = document.getElementById('message');
-    msg.value = msg.value.trim();
+    const question  = msg.value.trim();
+    msg.value = "";
 
     /* check if message is empty */
-    if (msg.value == "") {
+    if (question == "") {
         return;
     }
 
-    console.log(msg.value);
-
     // add user message to chat
-    add_user_message(msg.value);
-    msg.value = "";
-
+    add_user_message(question);
+   
     // add bot message to chat
-    add_chat_message("hello world " + tmp);
-    tmp += 1;
+    ask_gpt(question).then((response) => {
+        add_chat_message(response);
+    }).catch((error) => {
+        console.log(error);
+    });
 }
 
 // Add account to list (TODO)
@@ -169,8 +169,6 @@ function on_login_button() {
 
     // check if password is correct
     if (password_hash == stored_password_hash) {
-        console.log("Login: " + selected_account + " " + password);
-
         // store open AI key
         const encrypted_key = account_blob[selected_account][1];
         var key = CryptoJS.AES.decrypt(encrypted_key, password);
@@ -179,8 +177,6 @@ function on_login_button() {
         // clear app div 
         app = document.getElementById("app");
         app.innerHTML = "";
-    
-        console.log("here");
         return true;        
     }
 
