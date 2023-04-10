@@ -171,6 +171,12 @@ function on_login_button() {
     if (password_hash == stored_password_hash) {
         console.log("Login: " + selected_account + " " + password);
 
+        // store open AI key
+        const encrypted_key = account_blob[selected_account][1];
+        var key = CryptoJS.AES.decrypt(encrypted_key, password);
+        temporary_store("open_AI_key", key.toString(CryptoJS.enc.Utf8));
+
+
         // clear app div 
         app = document.getElementById("app");
         app.innerHTML = "";

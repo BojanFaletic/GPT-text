@@ -2,10 +2,11 @@
 // Ask GPT-3 a question and get a response
 async function ask_gpt(question) {
     const API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+    const key = temporary_retrieve("open_AI_key");
 
     const requestHeaders = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        'Authorization': `Bearer ${key}`
     };
 
     const message = [{ "role": "user", "content": question }];
@@ -30,6 +31,7 @@ async function ask_gpt(question) {
 // Get the embedding of a text
 async function get_embedding(text) {
     const API_ENDPOINT = 'https://api.openai.com/v1/embeddings';
+    const key = temporary_retrieve("open_AI_key");
 
     const data = {
         "input": text,
@@ -40,7 +42,7 @@ async function get_embedding(text) {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENAI_API_KEY}`
+            "Authorization": `Bearer ${key}`
         },
         body: JSON.stringify(data)
     };
@@ -51,8 +53,9 @@ async function get_embedding(text) {
 }
 
 // Check if the OpenAI key is valid
-function get_valid_account(key) {
+function get_valid_account() {
     const API_ENDPOINT = 'https://api.openai.com/v1/models';
+    const key = temporary_retrieve("open_AI_key");
 
     const requestHeaders = {
         'Content-Type': 'application/json',

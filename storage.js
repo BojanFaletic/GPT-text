@@ -29,14 +29,7 @@ function temporary_clear() {
 // Testing
 function permanent_init() {
     permanent_clear();
-
-    // TODO: password should be hashed
-    /*
-    var encrypted = CryptoJS.AES.encrypt("Message", "Secret Passphrase");​
-    var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
-    */
-    //const account = {"account1": "p1", "account2": "p2", "account3": "p3"};
-
+    
     // [username] = [password, openAI_key]
     fetch("preset_accounts.json")
         .then(response => response.json())
@@ -50,4 +43,5 @@ function temporary_init() {
 
     const selected_account = "";
     temporary_store("selected_account", selected_account);
+    temporary_store("open_AI_key", "");
 }
