@@ -54,6 +54,10 @@ function chat_menu() {
         .then(data => {
             document.getElementById("app").innerHTML = data;
 
+            // load chat trees
+            load_current_chat_tree();
+
+            // add event listener to message field
             document.getElementById('message').addEventListener('keyup', function (e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     on_send_button();

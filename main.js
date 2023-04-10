@@ -1,3 +1,7 @@
+/* TODO: add support for markdown
+Here is a simple Python function that prints "Hello, World!" when called: ``` def hello_world(): print("Hello, World!") ``` To call this function, simply type `hello_world()` in your Python environment.
+*/
+
 // add bot message to chat
 function add_chat_message(text) {
     var chat = document.getElementById('chat_history');
@@ -43,6 +47,22 @@ function add_user_message(text) {
     chat.appendChild(msg_user);
 }
 
+// load chat trees from local storage
+function load_current_chat_tree(){
+    const chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
+    if (chat_trees == null) {
+        return;
+    }
+    for (let i = 0; i < chat_trees.length; i++) {
+        let chat_tree = chat_trees[i];
+        if (i % 2 == 0) {
+            add_user_message(chat_tree);
+        } else {
+            add_chat_message(chat_tree);
+        }
+    }
+}
+
 // user sends message in chat
 function on_send_button() {
     // get from text from message
@@ -61,6 +81,12 @@ function on_send_button() {
     // add bot message to chat
     ask_gpt(question).then((response) => {
         add_chat_message(response);
+
+        // add response to history
+        var chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
+        chat_trees.push(question);
+        chat_trees.push(response);
+        temporary_store("chat_trees", JSON.stringify(chat_trees));
     }).catch((error) => {
         console.log(error);
     });

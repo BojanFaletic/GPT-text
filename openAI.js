@@ -9,8 +9,20 @@ async function ask_gpt(question) {
         'Authorization': `Bearer ${key}`
     };
 
-    const message = [{ "role": "user", "content": question }];
-
+    // make chat history
+    const chat_trees = JSON.parse(temporary_retrieve("chat_trees"));
+    if (chat_trees.length % 2 != 0) {
+        console.log("Error: chat_trees is not even");
+        return;
+    }
+    var message = [];
+    for (let i = 0; i < chat_trees.length; i++) {
+        const role = i%2 == 0 ? "user" : "assistant";
+        message.push({ "role": role, "content": chat_trees[i]});
+    }
+    // add current question to chat history
+    message.push({ "role": "user", "content": question }); 
+    
     const requestData = {
         model: 'gpt-3.5-turbo',
         messages: message,
