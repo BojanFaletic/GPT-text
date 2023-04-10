@@ -76,12 +76,3 @@ function logout_menu() {
     document.getElementById("app").innerHTML = "";
     login_page();
 }
-
-function delete_menu() {
-    fetch('pages/delete.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("app").innerHTML = data;
-        }
-    );
-}

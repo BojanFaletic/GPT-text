@@ -28,6 +28,7 @@ function temporary_clear() {
 
 // Testing
 function permanent_init() {
+    /*
     permanent_clear();
     
     // [username] = [password, openAI_key]
@@ -36,6 +37,7 @@ function permanent_init() {
         .then(data => {
             permanent_store("accounts", JSON.stringify(data));
         });
+    */
 }
 
 function temporary_init() {

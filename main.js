@@ -66,13 +66,6 @@ function on_send_button() {
     tmp += 1;
 }
 
-
-// toggle registration menu
-var is_registration_selected = false;
-function on_menu_registration() {
-    is_registration_selected = !is_registration_selected;
-}
-
 // Add account to list (TODO)
 function on_register_button() {
     const username = document.getElementById("username").value;
@@ -80,6 +73,26 @@ function on_register_button() {
     let password_2 = document.getElementById("password_2").value;
     let open_AI_key = document.getElementById("key").value;
 
+    // check if username is null
+    if (username.trim() == "") {
+        alert("Username cannot be empty");
+        return;
+    }
+
+    // check if username is taken
+    users = JSON.parse(permanent_retrieve("accounts"))
+    // add account to list
+    if (users == null) {
+        users = {};
+    }
+
+    // check if username is taken
+    if (username in users) {
+        alert("Username is taken");
+        return;
+    }
+
+    // check if passwords match
     if (password != password_2) {
         alert("Passwords do not match");
         return;
@@ -92,20 +105,15 @@ function on_register_button() {
     var encrypted_password = CryptoJS.AES.encrypt(open_AI_key, password);
     var encoded_password = encrypted_password.toString();
 
-    users = JSON.parse(permanent_retrieve("accounts"))
-    if (users == null) {
-        users = {};
-    }
+    // add account to list
     users[username] = [sha_password, encoded_password];
     permanent_store("accounts", JSON.stringify(users));
-
     temporary_store("selected_account", username);
 
     // clear registration menu
     document.getElementById("menu").innerHTML = "";
     display_menu();
     chat_menu();
-
 }
 
 function generate_accounts() {
@@ -143,10 +151,6 @@ function generate_accounts() {
 // login into existing account
 function on_login_button() {
     let selected_account = temporary_retrieve("selected_account");
-    let password = document.getElementById("password").value;
-
-    // clear password
-    document.getElementById("password").value = "";
 
     // check if account is selected
     if (!selected_account) {
@@ -154,20 +158,16 @@ function on_login_button() {
         return;
     }
 
-    /* decode 
-        var decrypted_password = CryptoJS.AES.decrypt(encoded_password, password);
-        var decoded_password = decrypted_password.toString(CryptoJS.enc.Utf8);
-
-        console.log("decoded_password: " + decoded_password);
-    */
-
+    // get password hash
+    let password = document.getElementById("password").value;
+    document.getElementById("password").value = "";
     const password_hash = CryptoJS.SHA256(password).toString();
 
-
-    // check if password is correct
+    // get stored password hash
     const account_blob = JSON.parse(permanent_retrieve("accounts"));
     const stored_password_hash = account_blob[selected_account][0];
 
+    // check if password is correct
     if (password_hash == stored_password_hash) {
         console.log("Login: " + selected_account + " " + password);
 
@@ -175,7 +175,6 @@ function on_login_button() {
         const encrypted_key = account_blob[selected_account][1];
         var key = CryptoJS.AES.decrypt(encrypted_key, password);
         temporary_store("open_AI_key", key.toString(CryptoJS.enc.Utf8));
-
 
         // clear app div 
         app = document.getElementById("app");
@@ -187,7 +186,27 @@ function on_login_button() {
 
     console.log("Incorrect password");
     return;
+}
 
+function on_delete_button(){
+    // get selected account
+    let selected_account = temporary_retrieve("selected_account");
+    
+    // check if account is selected
+    if (!selected_account) {
+        console.log("No account selected");
+        return;
+    }
+
+    // delete account
+    let accounts = JSON.parse(permanent_retrieve("accounts"));
+    delete accounts[selected_account];
+    permanent_store("accounts", JSON.stringify(accounts));
+    temporary_store("selected_account", "");
+
+    // reload accounts
+    document.getElementById("accounts").innerHTML = "";
+    generate_accounts();
 }
 
 
