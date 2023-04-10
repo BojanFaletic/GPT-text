@@ -6,16 +6,16 @@ body {
     /* set font color */
     color: #fff;
     /* set font size */
-    font-size: 1.5em;
+    font-size: 1.0em;
     /* set font family */
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #chat{
     /* set width */
-    /* width: 500px; */
+    width: 100vh;
     /* set height */
-    /* height: 500px; */
+    height: 100vx;
     /* set border */
     border: 1px solid #334a40;
     /* set border radius */
@@ -31,37 +31,43 @@ body {
 /* for box class */
 .msg_user {
     /* position a bit to the right */
-    background-color: #57a783;
+    background: linear-gradient(to bottom, #86968f 0%, #9a57a7 100%);
     border: 1px solid #334a40;
     border-radius: 5px;
     color: #fff;
-    padding: 10px;
+    /*padding: 10px;*/
     margin-left: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.msg_current{
+.message{
     /* position a bit to the right */
-    background-color: #57a783;
+    background-color: #a77b57;
     border: 1px solid #334a40;
-    border-radius: 5px;
-    color: #fff;
-    padding: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 5px;
+
+    /* set width to be the same as the parent */
+    width: 100%;
+}
+
+#chat_history{
+    height: 80vh;
+    /* set overflow */
+    overflow: auto;
+
+
 }
 
 
 .msg_bot {
-    background-color: #b482c3;
+    background: linear-gradient(to bottom, #86968f 0%, #575ca7 100%);
+
     border: 1px solid #334a40;
     border-radius: 5px;
     color: #fff;
     padding: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
+    margin-right: 5px;
+    margin-top: 5px;
 }
 
 .msg_icon{
@@ -78,19 +84,7 @@ body {
 
 #message{
     /* set width */
-    width: 95%;
-    /* set border */
-    border: 1px solid #334a40;
-    /* set border radius */
-    border-radius: 5px;
-    /* set background color */
-    background-color: #b6edda;
-    /* set margin */
-    margin: 0 auto;
-    /* set padding */
-    padding: 10px;
-    /* set overflow */
-    overflow: auto;
+    width: 100%;
 }
 
 #send{
@@ -110,3 +104,40 @@ body {
     overflow: auto;
 }
 
+#pdf_list{
+    border: 1px solid #334a40;
+    background-color: #b482c3;
+}
+
+#header{
+    background-color: #716874;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+#login_page{
+    background-color: #5b5a5c;
+    border: 1px solid #334a40;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+
+    width: 500px;
+
+}
+
+#login_section
+{
+    /* set width */
+    background-color: #b482c3;
+}
+
+#registration{
+    background-color: #575ca7;
+}
