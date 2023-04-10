@@ -71,19 +71,8 @@ function history_menu() {
 }
 
 function logout_menu() {
-    fetch('pages/logout.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("app").innerHTML = data;
-        }
-    );
-
-    // clear session storage
     temporary_clear();
-
-    // change login menu
-    let login_button = document.getElementById("menu_login");
-    login_button.innerHTML = "Login";
+    login_page();
 }
 
 function delete_menu() {
