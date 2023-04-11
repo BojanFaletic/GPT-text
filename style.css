@@ -142,19 +142,23 @@ body {
     background-color: #575ca7;
 }
 
+/*
 #text-container{
     background-color: #5b0b74;
     height: 500px;
     overflow: auto;
 }
+*/
 
 #text_chunks{
-    background-color: #0b743a;
+    background-color: #8c9e94;
     padding: 10px;
+    height: 500px;
+    overflow: auto;
 }
 
 .chunk{
-    background-color: #c54fe9;
+    background-color: #382e3b;
     padding: 10px;
     margin-block: 10px;
 }

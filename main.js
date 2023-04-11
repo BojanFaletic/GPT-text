@@ -273,12 +273,7 @@ function on_upload_button() {
                         if (i === pdf.numPages) {
                             // append text to chat
                             const file_name = file.name;
-                            pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
-                            if (pdf_data == null) {
-                                pdf_data = {};
-                            }
-                            pdf_data[file_name] = textContent.join('\n');
-                            permanent_store("pdf_data", JSON.stringify(pdf_data));
+                            pdf_store(file_name, textContent.join('\n'));
 
                             // draw pdf
                             draw_pdf();
@@ -295,20 +290,16 @@ function on_upload_button() {
 function on_delete_pdf(){
     // get selected pdf
     let selected_pdf = temporary_retrieve("selected_pdf");
-
-    // check if pdf is selected
     if (!selected_pdf) {
         console.log("No pdf selected");
         return;
     }
 
-    // delete pdf
-    let pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
-    delete pdf_data[selected_pdf];
-    permanent_store("pdf_data", JSON.stringify(pdf_data));
+    // delete PDF
+    pdf_remove(selected_pdf);
     temporary_store("selected_pdf", "");
 
-    // reload pdfs
+    // reload PDFs
     draw_pdf();
 }
 
@@ -317,7 +308,7 @@ function draw_pdf() {
     const pdf_list = document.getElementById("pdf_list");
     pdf_list.innerHTML = "";
 
-    const pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
+    const pdf_data = JSON.parse(permanent_retrieve("pdf"));
     for (file_name in pdf_data) {
 
         // insert button
@@ -348,20 +339,15 @@ function draw_pdf() {
     }
 }
 
-function displayText() {
-    const selected_pdf = temporary_retrieve("selected_pdf");
-    const pdf_data = JSON.parse(permanent_retrieve("pdf_data"));
 
-    const textContainer = document.getElementById('text-container');
-    textContainer.innerText = pdf_data[selected_pdf];
-
+// split pdf into chunks
+function split_pdf_to_chunks(text){
     const average_chunk_length = 1000;
     const max_chunk_length = 2000;
     const hard_separator = '\n\n';
     const soft_separator = '\n';
 
-    // split text into chunks
-    let chunks = textContainer.innerText.split(hard_separator);
+    let chunks = text.split(hard_separator);
 
     // while chunks are too short, merge them
     for (let i = 0; i < chunks.length - 1; i++) {
@@ -389,9 +375,35 @@ function displayText() {
             }
         }
     }
+
+    return chunks;
+}
+
+function displayText() {
+    const selected_pdf = temporary_retrieve("selected_pdf");
+    if (!selected_pdf) {
+        return;
+    }
+    const pdf_data = pdf_retrieve(selected_pdf);
+    if (!pdf_data) {
+        return;
+    }
+
+    // insert full text into div
+    /*
+    const textContainer = document.getElementById('text-container');
+    textContainer.innerText = pdf_data[selected_pdf];
+    */
+
+    // chunk preprocessing
+    
+    // split text into chunks
     
     // render chunks
     const chunkContainer = document.getElementById('text_chunks');
+    chunkContainer.innerHTML = "";
+
+    const chunks = pdf_data["chunk"];
     for (let i = 0; i < chunks.length; i++) {
         const chunk = document.createElement('div');
         chunk.className = 'chunk';
