@@ -310,24 +310,19 @@ function cosine_similarity(a, b) {
 }
 
 
-function display_top_k_chunks(pdf_blob, pdf_name, top_k) {
+// search pdf [name, score, chunk_idx, chunk_data, chunk_length]
+function display_top_k_chunks(pdf_blob, top_k) {
     var search_results = document.getElementById("search_results");
     search_results.innerHTML = "";
-    const chunks = pdf_blob["chunk"];
-
-    const scores_values = [];
-    for (let i = 0; i < chunks.length; i++) {
-        scores_values.push([chunks[i], pdf_blob["scores"][i], i]);
-    }
-
-    // get top k chunks
-    scores_values.sort(function (a, b) {
+    
+    // get top k chunks (sort by score)
+    pdf_blob.sort(function (a, b) {
         return b[1] - a[1];
     });
 
-    const max_search = Math.min(top_k, scores_values.length);
+    const max_search = Math.min(top_k, pdf_blob.length);
     for (let i = 0; i < max_search; i++) {
-        const [chunk_value, score_value, chunk_i] = scores_values[i];
+        const [pdf_name, score_value, chunk_i, chunk_value, chunk_length] = pdf_blob[i];
 
         // create div
         let div = document.createElement("div");
@@ -347,7 +342,7 @@ function display_top_k_chunks(pdf_blob, pdf_name, top_k) {
 
         // insert chunk idx
         let chunk_idx = document.createElement("div");
-        chunk_idx.innerHTML = chunk_i + " of " + chunks.length;
+        chunk_idx.innerHTML = chunk_i + " of " + chunk_length;
         div.appendChild(chunk_idx);
 
         // insert pdf name
@@ -358,6 +353,7 @@ function display_top_k_chunks(pdf_blob, pdf_name, top_k) {
         search_results.appendChild(div);
     }
 }
+
 
 function on_search_button() {
     // get search query
@@ -372,18 +368,23 @@ function on_search_button() {
     get_embedding(query).then((question) => {
         // get all embeddings
         const all_PDDs = pdf_get_all();
+        let score_blob = [];
+
+        // calculate cosine similarity
         for (let pdf in all_PDDs) {
             const pdf_data = pdf_retrieve(pdf);
             const pdf_embedding = pdf_data["embed"];
 
-            var scores = [];
             for (let i = 0; i < pdf_embedding.length; i++) {
                 const score = cosine_similarity(question, pdf_embedding[i]);
-                scores.push(score);
+                score_blob.push(
+                    [pdf, score, i, pdf_data["chunk"][i], pdf_embedding.length]
+                );
             }
-            pdf_data["scores"] = scores;
-            display_top_k_chunks(pdf_data, pdf, 3);
         }
+
+        // display top k chunks
+        display_top_k_chunks(score_blob, 3);
     }).catch((error) => {
         console.log(error);
     });
