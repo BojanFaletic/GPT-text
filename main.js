@@ -310,32 +310,50 @@ function cosine_similarity(a, b) {
 }
 
 
-function display_top_k_chunks(pdf_blob) {
+function display_top_k_chunks(pdf_blob, pdf_name, top_k) {
     var search_results = document.getElementById("search_results");
     search_results.innerHTML = "";
     const chunks = pdf_blob["chunk"];
+
+    const scores_values = [];
     for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i];
-        const score = pdf_blob["scores"][i];
+        scores_values.push([chunks[i], pdf_blob["scores"][i], i]);
+    }
+
+    // get top k chunks
+    scores_values.sort(function (a, b) {
+        return b[1] - a[1];
+    });
+
+    const max_search = Math.min(top_k, scores_values.length);
+    for (let i = 0; i < max_search; i++) {
+        const [chunk_value, score_value, chunk_i] = scores_values[i];
 
         // create div
         let div = document.createElement("div");
         div.className = "search_result";
-        div.innerHTML = chunk;
+        div.innerHTML = chunk_value;
         div.className = "chunk";
 
         // create score
         let score_div = document.createElement("div");
         score_div.className = "score";
-        score_div.innerHTML = "Score: " + score.toFixed(2);
+
+        // use 2 decimal places
+        score_div.innerHTML = "Score: " + score_value.toFixed(2); 
 
         // append div
         div.appendChild(score_div);
 
         // insert chunk idx
         let chunk_idx = document.createElement("div");
-        chunk_idx.innerHTML = i;
+        chunk_idx.innerHTML = chunk_i + " of " + chunks.length;
         div.appendChild(chunk_idx);
+
+        // insert pdf name
+        let pdf_name_div = document.createElement("div");
+        pdf_name_div.innerHTML = pdf_name;
+        div.appendChild(pdf_name_div);
 
         search_results.appendChild(div);
     }
@@ -364,7 +382,7 @@ function on_search_button() {
                 scores.push(score);
             }
             pdf_data["scores"] = scores;
-            display_top_k_chunks(pdf_data);
+            display_top_k_chunks(pdf_data, pdf, 3);
         }
     }).catch((error) => {
         console.log(error);
