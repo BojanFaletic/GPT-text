@@ -40,6 +40,22 @@ function display_menu() {
         });
 }
 
+function search_menu() {
+    fetch('pages/search.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("app").innerHTML = data;
+
+            // event listener for search_input
+            document.getElementById('search_input').addEventListener('keyup', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    on_search_button();
+                }
+            });
+        });
+}
+
+
 function pdf_menu() {
     fetch('pages/pdf.html')
         .then(response => response.text())

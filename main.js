@@ -286,8 +286,93 @@ function on_upload_button() {
     reader.readAsArrayBuffer(file);
 }
 
+function dot(a, b) {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+        sum += a[i] * b[i];
+    }
+    return sum;
+}
+
+function magnitude(a) {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+        sum += a[i] * a[i];
+    }
+    return Math.sqrt(sum);
+}
+
+function cosine_similarity(a, b) {
+    const dot_product = dot(a, b);
+    const magnitude_a = magnitude(a);
+    const magnitude_b = magnitude(b);
+    return dot_product / (magnitude_a * magnitude_b);
+}
+
+
+function display_top_k_chunks(pdf_blob) {
+    var search_results = document.getElementById("search_results");
+    search_results.innerHTML = "";
+    const chunks = pdf_blob["chunk"];
+    for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const score = pdf_blob["scores"][i];
+
+        // create div
+        let div = document.createElement("div");
+        div.className = "search_result";
+        div.innerHTML = chunk;
+        div.className = "chunk";
+
+        // create score
+        let score_div = document.createElement("div");
+        score_div.className = "score";
+        score_div.innerHTML = "Score: " + score.toFixed(2);
+
+        // append div
+        div.appendChild(score_div);
+
+        // insert chunk idx
+        let chunk_idx = document.createElement("div");
+        chunk_idx.innerHTML = i;
+        div.appendChild(chunk_idx);
+
+        search_results.appendChild(div);
+    }
+}
+
+function on_search_button() {
+    // get search query
+    let query = document.getElementById("search_input").value;
+    document.getElementById("search_input").value = "";
+
+    console.log("Query: " + query);
+
+    //const question = pdf_embedding[0];
+
+    // get query embedding
+    get_embedding(query).then((question) => {
+        // get all embeddings
+        const all_PDDs = pdf_get_all();
+        for (let pdf in all_PDDs) {
+            const pdf_data = pdf_retrieve(pdf);
+            const pdf_embedding = pdf_data["embed"];
+
+            var scores = [];
+            for (let i = 0; i < pdf_embedding.length; i++) {
+                const score = cosine_similarity(question, pdf_embedding[i]);
+                scores.push(score);
+            }
+            pdf_data["scores"] = scores;
+            display_top_k_chunks(pdf_data);
+        }
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 // delete pdf
-function on_delete_pdf(){
+function on_delete_pdf() {
     // get selected pdf
     let selected_pdf = temporary_retrieve("selected_pdf");
     if (!selected_pdf) {
@@ -342,7 +427,7 @@ function draw_pdf() {
 
 
 // split pdf into chunks
-function split_pdf_to_chunks(text){
+function split_pdf_to_chunks(text) {
     const average_chunk_length = 1000;
     const max_chunk_length = 2000;
     const hard_separator = '\n\n';
@@ -401,7 +486,7 @@ function display_pdf_info() {
     const char_per_token = 3.6;
 
     const pdf_length_tokes = pdf_length_bytes / char_per_token;
-    const estimated_cost = pdf_length_tokes / 1000 * embed_cost_per_1000_tokens; 
+    const estimated_cost = pdf_length_tokes / 1000 * embed_cost_per_1000_tokens;
 
     // <p>File name: selected_pdf</p>
     const p = document.createElement('p');
@@ -442,7 +527,7 @@ function on_embed_pdf() {
     const chunks = pdf_data["chunk"];
 
     // check if pdf is already embedded
-    if (pdf_data["embed"].length == chunks.length) { 
+    if (pdf_data["embed"].length == chunks.length) {
         console.log("PDF already embedded");
         return;
     }
@@ -482,9 +567,9 @@ function displayText() {
     */
 
     // chunk preprocessing
-    
+
     // split text into chunks
-    
+
     // render chunks
     const chunkContainer = document.getElementById('text_chunks');
     chunkContainer.innerHTML = "";
@@ -493,7 +578,7 @@ function displayText() {
     for (let i = 0; i < chunks.length; i++) {
         const chunk = document.createElement('div');
         chunk.className = 'chunk';
-        chunk.innerText = '<chunk id='+i+'>\n' + chunks[i] + '\n</chunk>';
+        chunk.innerText = '<chunk id=' + i + '>\n' + chunks[i] + '\n</chunk>';
         chunkContainer.appendChild(chunk);
     }
 }

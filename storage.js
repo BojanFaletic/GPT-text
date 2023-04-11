@@ -44,10 +44,30 @@ function temporary_clear() {
     ...
 */
 
+
+// get list of all PDFs
+function pdf_get_all() {
+    let pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
+    if (pdf_data_json == null) {
+        return null;
+    }
+    return pdf_data_json;
+}
+
+
+// get id of specific pdf
+function pdf_get_id(pdf_name) {
+    const pdf_list = pdf_get_all();
+    if (pdf_list == null) {
+        return null;
+    }
+    return pdf_list[pdf_name];
+}
+
 // description: store pdf data
 function pdf_store(pdf_name, pdf_data) {
     // get list of PDFs and add new one
-    let pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
+    let pdf_data_json = pdf_get_all();
     if (pdf_data_json == null) {
         pdf_data_json = {};
     }
@@ -78,16 +98,6 @@ function pdf_store(pdf_name, pdf_data) {
 }
 
 
-function pdf_get_id(pdf_name) {
-    // get list of PDFs
-    let pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
-    if (pdf_data_json == null) {
-        return null;
-    }
-    return pdf_data_json[pdf_name];
-}
-
-
 // retrieve pdf data
 function pdf_retrieve(pdf_name) {
     // look up pdf id
@@ -104,12 +114,7 @@ function pdf_retrieve(pdf_name) {
 
 // remove pdf from storage
 function pdf_remove(pdf_name) {
-    // look up pdf id
-    const pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
-    if (pdf_data_json == null) {
-        return;
-    }
-    const pdf_id_name = pdf_data_json[pdf_name];
+    const pdf_id_name = pdf_get_id(pdf_name);
     if (pdf_id_name == null) {
         return;
     }
