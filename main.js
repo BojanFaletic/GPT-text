@@ -5,46 +5,25 @@ Here is a simple Python function that prints "Hello, World!" when called: ``` de
 // add bot message to chat
 function add_chat_message(text) {
     var chat = document.getElementById('chat_history');
-
-    // make box 1 and append to chat
-    var msg_user = document.createElement('div');
-    msg_user.className = 'msg_bot';
-    var msg_icon = document.createElement('img');
-    msg_icon.src = 'images/gpt4.png';
-    msg_icon.alt = 'gpt';
-    msg_icon.className = 'msg_icon';
-    msg_user.appendChild(msg_icon);
-
-    // add paragraph
-    var msg_text = document.createElement('p');
-    msg_text.className = 'msg_text';
-    msg_text.innerHTML = text;
-    msg_user.appendChild(msg_text);
-
-    msg_user.appendChild(msg_text);
-    chat.appendChild(msg_user);
+    fetch('pages/msg_box_chat.html')
+        .then(response => response.text())
+        .then(data => {
+            chat.innerHTML += data;
+            var msg_text = document.getElementsByClassName('msg_text');
+            msg_text[msg_text.length - 1].innerHTML = text;
+        });
 }
 
 // add user message to chat
 function add_user_message(text) {
     var chat = document.getElementById('chat_history');
-
-    // make box 1 and append to chat
-    var msg_user = document.createElement('div');
-    msg_user.className = 'msg_user';
-    var msg_icon = document.createElement('img');
-    msg_icon.src = 'images/user.png';
-    msg_icon.alt = 'gpt';
-    msg_icon.className = 'msg_icon';
-    msg_user.appendChild(msg_icon);
-
-    // add paragraph
-    var msg_text = document.createElement('p');
-    msg_text.className = 'msg_text';
-    msg_text.innerHTML = text;
-    msg_user.appendChild(msg_text);
-
-    chat.appendChild(msg_user);
+    fetch('pages/msg_box_user.html')
+        .then(response => response.text())
+        .then(data => {
+            chat.innerHTML += data;
+            var msg_text = document.getElementsByClassName('msg_text');
+            msg_text[msg_text.length - 1].innerHTML = text;
+        });
 }
 
 // load chat trees from local storage
