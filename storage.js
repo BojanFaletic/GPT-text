@@ -37,6 +37,15 @@ function permanent_init() {
         .catch((error) => {
             console.log("No preset accounts found");
         });
+
+    fetch("private/pdf_data.json")
+        .then(response => response.json())
+        .then(data => {
+            permanent_store("pdf_data", JSON.stringify(data));
+        })
+        .catch((error) => {
+            console.log("No pdf data found");
+        });
 }
 
 function temporary_init() {

@@ -354,4 +354,48 @@ function displayText() {
 
     const textContainer = document.getElementById('text-container');
     textContainer.innerText = pdf_data[selected_pdf];
+
+    const average_chunk_length = 1000;
+    const max_chunk_length = 2000;
+    const hard_separator = '\n\n';
+    const soft_separator = '\n';
+
+    // split text into chunks
+    let chunks = textContainer.innerText.split(hard_separator);
+
+    // while chunks are too short, merge them
+    for (let i = 0; i < chunks.length - 1; i++) {
+        while (chunks[i].length + chunks[i + 1].length < average_chunk_length) {
+            chunks[i] += hard_separator + chunks[i + 1];
+            chunks.splice(i + 1, 1);
+
+            // check if next chunk exists
+            if (i + 1 >= chunks.length) {
+                break;
+            }
+        }
+    }
+
+    // while chunks are too long, split them
+    for (let i = 0; i < chunks.length; i++) {
+        while (chunks[i].length > max_chunk_length) {
+            const split_index = chunks[i].lastIndexOf(soft_separator, max_chunk_length);
+            chunks.splice(i + 1, 0, chunks[i].substring(split_index + 1));
+            chunks[i] = chunks[i].substring(0, split_index);
+
+            // check if next chunk exists
+            if (i + 1 >= chunks.length) {
+                break;
+            }
+        }
+    }
+    
+    // render chunks
+    const chunkContainer = document.getElementById('text_chunks');
+    for (let i = 0; i < chunks.length; i++) {
+        const chunk = document.createElement('div');
+        chunk.className = 'chunk';
+        chunk.innerText = '<chunk id='+i+'>\n' + chunks[i] + '\n</chunk>';
+        chunkContainer.appendChild(chunk);
+    }
 }

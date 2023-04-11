@@ -141,3 +141,20 @@ body {
 #registration{
     background-color: #575ca7;
 }
+
+#text-container{
+    background-color: #5b0b74;
+    height: 500px;
+    overflow: auto;
+}
+
+#text_chunks{
+    background-color: #0b743a;
+    padding: 10px;
+}
+
+.chunk{
+    background-color: #c54fe9;
+    padding: 10px;
+    margin-block: 10px;
+}
