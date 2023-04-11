@@ -78,14 +78,20 @@ function pdf_store(pdf_name, pdf_data) {
 }
 
 
-// retrieve pdf data
-function pdf_retrieve(pdf_name) {
-    // look up pdf id
-    const pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
+function pdf_get_id(pdf_name) {
+    // get list of PDFs
+    let pdf_data_json = JSON.parse(permanent_retrieve("pdf"));
     if (pdf_data_json == null) {
         return null;
     }
-    const pdf_id_name = pdf_data_json[pdf_name];
+    return pdf_data_json[pdf_name];
+}
+
+
+// retrieve pdf data
+function pdf_retrieve(pdf_name) {
+    // look up pdf id
+    const pdf_id_name = pdf_get_id(pdf_name);
     if (pdf_id_name == null) {
         return null;
     }
@@ -129,10 +135,20 @@ function permanent_init() {
             console.log("No preset accounts found");
         });
 
+    // get list of all PDF files
+    fetch("private/pdf_keys.json")
+        .then(response => response.json())
+        .then(data => {
+            permanent_store("pdf", JSON.stringify(data));
+        })
+        .catch((error) => {
+            console.log("No pdf keys found");
+        });
+
     fetch("private/pdf_data.json")
         .then(response => response.json())
         .then(data => {
-            permanent_store("pdf_data", JSON.stringify(data));
+            permanent_store("s41562-022-01516-2 (1).pdf__1", JSON.stringify(data));
         })
         .catch((error) => {
             console.log("No pdf data found");

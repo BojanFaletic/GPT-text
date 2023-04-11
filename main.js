@@ -333,8 +333,9 @@ function draw_pdf() {
             temporary_store("selected_pdf", buttons[i].id);
             buttons[i].style.backgroundColor = "lightblue";
 
-            // display text
+            // display text and pdf info
             displayText();
+            display_pdf_info();
         }
     }
 }
@@ -377,6 +378,91 @@ function split_pdf_to_chunks(text){
     }
 
     return chunks;
+}
+
+function display_pdf_info() {
+    const selected_pdf = temporary_retrieve("selected_pdf");
+    if (!selected_pdf) {
+        return;
+    }
+    const pdf_data = pdf_retrieve(selected_pdf);
+    if (!pdf_data) {
+        return;
+    }
+
+    // insert pdf info into div
+    const infoContainer = document.getElementById('pdf_info');
+    infoContainer.innerHTML = "";
+
+    const pdf_length_bytes = pdf_data["data"].length;
+
+    // using OpenAI Ada embedding 0.04 cent per 1000 tokens
+    const embed_cost_per_1000_tokens = 0.04;
+    const char_per_token = 3.6;
+
+    const pdf_length_tokes = pdf_length_bytes / char_per_token;
+    const estimated_cost = pdf_length_tokes / 1000 * embed_cost_per_1000_tokens; 
+
+    // <p>File name: selected_pdf</p>
+    const p = document.createElement('p');
+    p.innerText = 'File name: ' + selected_pdf;
+    infoContainer.appendChild(p);
+
+    // <p class="bold">embed cost: 0.04 cents</p>
+    const p2 = document.createElement('p');
+    p2.className = "bold";
+    p2.innerText = 'embed cost: ' + estimated_cost.toFixed(2) + ' cents ';
+
+    // <button onclick="on_embed_pdf()">Embed PDF</button>
+    const button = document.createElement('button');
+    button.type = "text";
+    button.id = "embed_pdf";
+    button.innerHTML = "Embed PDF";
+    button.onclick = function () {
+        on_embed_pdf();
+    }
+    p2.appendChild(button);
+    infoContainer.appendChild(p2);
+}
+
+function on_embed_pdf() {
+    // get selected pdf
+    let selected_pdf = temporary_retrieve("selected_pdf");
+    if (!selected_pdf) {
+        console.log("No pdf selected");
+        return;
+    }
+
+    // get pdf data
+    let pdf_data = pdf_retrieve(selected_pdf);
+    if (!pdf_data) {
+        console.log("No pdf data");
+        return;
+    }
+    const chunks = pdf_data["chunk"];
+
+    // check if pdf is already embedded
+    if (pdf_data["embed"].length == chunks.length) { 
+        console.log("PDF already embedded");
+        return;
+    }
+
+    let embed_chunk = [];
+    for (let i = 0; i < chunks.length; i++) {
+        get_embedding(chunks[i]).then(function (embedding) {
+            if (embedding) {
+                embed_chunk.push(embedding);
+                // check if all chunks are embedded
+                if (embed_chunk.length == chunks.length) {
+                    // store embedding
+                    const pdf_id = pdf_get_id(selected_pdf);
+                    pdf_data["embed"] = embed_chunk;
+                    permanent_store(pdf_id, JSON.stringify(pdf_data));
+                    console.log("PDF embedded");
+                }
+            }
+        });
+    }
 }
 
 function displayText() {
